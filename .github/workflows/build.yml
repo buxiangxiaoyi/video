@@ -1,0 +1,26 @@
+name: 自动打包
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+      - name: 安装Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      - name: 安装依赖
+        run: |
+          npm install -g pnpm
+          pnpm install
+      - name: 打包项目
+        run: pnpm run build
+      - name: 保存打包结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: 打包好的文件
+          path: dist/
